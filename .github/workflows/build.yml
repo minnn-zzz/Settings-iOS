@@ -14,22 +14,27 @@ jobs:
       - name: Set up Xcode Version
         run: sudo xcode-select -s /Applications/Xcode_15.4.app
 
-      - name: Compile Native Binary Target
+      - name: Force Generate Shared Schemes
         run: |
-          xcodebuild \
-            -project Settings-iOS.xcodeproj \
-            -target Settings-iOS \
+          # This forces Xcode to scan and open the file, creating a public scheme
+          xcodebuild -list -project Settings.xcodeproj
+
+      - name: Clean and Archive Project
+        run: |
+          xcodebuild archive \
+            -project Settings.xcodeproj \
+            -scheme Settings \
             -sdk iphoneos \
             -configuration Release \
+            -archivePath $GITHUB_WORKSPACE/build/Settings.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            clean build
+            CODE_SIGNING_REQUIRED=NO
 
       - name: Package App into IPA Layout
         run: |
           mkdir -p $GITHUB_WORKSPACE/build/Payload
-          cp -r build/Release-iphoneos/Settings-iOS.app $GITHUB_WORKSPACE/build/Payload/ 2>/dev/null || cp -r ~/Library/Developer/Xcode/DerivedData/*/Build/Products/Release-iphoneos/*.app $GITHUB_WORKSPACE/build/Payload/
+          cp -r $GITHUB_WORKSPACE/build/Settings.xcarchive/Products/Applications/*.app $GITHUB_WORKSPACE/build/Payload/
           cd $GITHUB_WORKSPACE/build
           zip -r Settings-iOS.ipa Payload/
 
