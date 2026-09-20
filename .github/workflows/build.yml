@@ -14,27 +14,11 @@ jobs:
       - name: Set up Xcode Version
         run: sudo xcode-select -s /Applications/Xcode_15.4.app
 
-      - name: Find Project and Scheme Names
-        id: find_details
-        run: |
-          # Automatically detect if it's a workspace or project file
-          if [ -d *.xcworkspace ]; then
-            echo "type=-workspace" >> $GITHUB_OUTPUT
-            echo "name=$(ls -d *.xcworkspace)" >> $GITHUB_OUTPUT
-          else
-            echo "type=-project" >> $GITHUB_OUTPUT
-            echo "name=$(ls -d *.xcodeproj)" >> $GITHUB_OUTPUT
-          fi
-          
-          # Automatically detect the target scheme name
-          SCHEME_NAME=$(xcodebuild -list -json | plutil -extract "project.schemes.0" raw - || echo "Settings-iOS")
-          echo "scheme=$SCHEME_NAME" >> $GITHUB_OUTPUT
-
       - name: Clean and Archive Project
         run: |
           xcodebuild archive \
-            ${{ steps.find_details.outputs.type }} "${{ steps.find_details.outputs.name }}" \
-            -scheme "${{ steps.find_details.outputs.scheme }}" \
+            -project Settings.xcodeproj \
+            -scheme Settings \
             -sdk iphoneos \
             -configuration Release \
             -archivePath $GITHUB_WORKSPACE/build/Settings-iOS.xcarchive \
