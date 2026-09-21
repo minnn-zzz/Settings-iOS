@@ -5,36 +5,54 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
-    
+    runs-on: macos-15          # or macos-26 / macos-latest if available
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Xcode Version
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-
-      - name: Force Generate Shared Schemes
+      - name: Select recent Xcode
         run: |
-          # This forces Xcode to scan and open the file, creating a public scheme
-          xcodebuild -list -project Settings.xcodeproj
+          # Prefer the newest available Xcode 26.x
+          ls /Applications | grep -i Xcode
+          # Common paths on current runners – adjust if needed after first run
+          if [ -d "/Applications/Xcode_26.4.1.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_26.4.1.app
+          elif [ -d "/Applications/Xcode_26.4.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_26.4.app
+          elif [ -d "/Applications/Xcode_26.3.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_26.3.app
+          elif [ -d "/Applications/Xcode_26.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_26.app
+          else
+            # fallback to whatever is default / newest
+            sudo xcode-select -s /Applications/Xcode.app
+          fi
+          xcodebuild -version
+          xcodebuild -showsdks | grep iphoneos
 
-      - name: Clean and Archive Project
+      - name: List schemes (debug)
+        run: xcodebuild -list -project Preferences.xcodeproj
+
+      - name: Clean and Archive (unsigned)
         run: |
           xcodebuild archive \
-            -project Settings.xcodeproj \
-            -scheme Settings \
+            -project Preferences.xcodeproj \
+            -scheme Preferences \
             -sdk iphoneos \
             -configuration Release \
-            -archivePath $GITHUB_WORKSPACE/build/Settings.xcarchive \
+            -destination "generic/platform=iOS" \
+            -archivePath $GITHUB_WORKSPACE/build/Preferences.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO
+            CODE_SIGNING_REQUIRED=NO \
+            ONLY_ACTIVE_ARCH=NO
 
-      - name: Package App into IPA Layout
+      - name: Package into IPA
         run: |
           mkdir -p $GITHUB_WORKSPACE/build/Payload
-          cp -r $GITHUB_WORKSPACE/build/Settings.xcarchive/Products/Applications/*.app $GITHUB_WORKSPACE/build/Payload/
+          cp -r $GITHUB_WORKSPACE/build/Preferences.xcarchive/Products/Applications/*.app \
+                $GITHUB_WORKSPACE/build/Payload/
           cd $GITHUB_WORKSPACE/build
           zip -r Settings-iOS.ipa Payload/
 
@@ -43,3 +61,4 @@ jobs:
         with:
           name: Settings-iOS-Unsigned-IPA
           path: build/Settings-iOS.ipa
+          retention-days: 7
