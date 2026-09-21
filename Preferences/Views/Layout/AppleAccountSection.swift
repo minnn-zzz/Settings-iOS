@@ -8,8 +8,8 @@ import SwiftUI
 /// Apple Account Button Label (fake logged-in state)
 struct AppleAccountSection: View {
     // Change these to whatever you want your friends to see
-    private let displayName = "Ming"       // your fake name
-    private let email = "ming92304@gmail.com"  // your fake email
+    private let displayName = "Machi Ming"       // your fake name
+    private let email = "Apple Account, iCLoud+ und mehr"  // your fake email
     
     var body: some View {
         HStack(spacing: 12) {
