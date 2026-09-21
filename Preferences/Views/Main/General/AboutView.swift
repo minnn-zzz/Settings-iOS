@@ -74,10 +74,10 @@ struct AboutView: View {
                         
             Section {
                 LabeledContent("SONGS".localized(path: path), value: "0")
-                LabeledContent("VIDEOS".localized(path: path), value: "0")
-                LabeledContent("PHOTOS".localized(path: path), value: "6")
+                LabeledContent("VIDEOS".localized(path: path), value: "229")
+                LabeledContent("PHOTOS".localized(path: path), value: "1518")
                 if !UIDevice.IsSimulator {
-                    LabeledContent("APPLICATIONS".localized(path: path), value: "1")
+                    LabeledContent("APPLICATIONS".localized(path: path), value: "52")
                 }
                 LabeledContent("User Data Capacity".localized(path: path), value: capacityStorage)
                 LabeledContent("User Data Available".localized(path: path), value: availableStorage)
