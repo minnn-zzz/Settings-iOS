@@ -43,11 +43,11 @@ struct AboutView: View {
                     )
                 )
                 
-                LabeledContent("ProductModelName".localized(path: path), value: UIDevice.`marketing-name`)
+                LabeledContent("ProductModelName".localized(path: path), value: UIDevice."iPhone 17")
                     .textSelection(.enabled)
                 LabeledContent(
                     "ProductModel".localized(path: path),
-                    value: showingModelNumber ? regulatoryModelNumber : "\(modelNumber)\(getRegionInfo())"
+                    value: showingModelNumber ? "A3520" : "MG6J4ZD/A"
                 )
                 .contentShape(Rectangle())
                 .onTapGesture {
@@ -56,17 +56,22 @@ struct AboutView: View {
                 LabeledContent("SerialNumber".localized(path: path), value: serialNumber)
             }
             .task {
+                // Force the exact values you want
+                modelNumber = "MG6J4"                 // base part
+                regulatoryModelNumber = "A3520"       // the A-number (stays the same)
+                
+                // Force the region suffix to ZD/A
+                // (we'll override getRegionInfo below)
+                
                 if serialNumber.isEmpty {
-                    serialNumber = MGHelper.read(key: "VasUgeSzVyHdB27g2XpN0g") ?? getRandomSerialNumber() // SerialNumber
-                    modelNumber = MGHelper.read(key: "D0cJ8r7U5zve6uA6QbOiLA") ?? getRegulatoryModelNumber() // ModelNumber
-                    regulatoryModelNumber = getRegulatoryModelNumber()
+                    serialNumber = getRandomSerialNumber()
                     wifiAddress = generateRandomAddress()
                     bluetoothAddress = generateRandomAddress()
                     eidValue = getRandomEID()
                     capacityStorage = UIDevice.storageCapacity ?? getTotalStorage()
                 }
             }
-            
+                        
             Section {
                 LabeledContent("SONGS".localized(path: path), value: "0")
                 LabeledContent("VIDEOS".localized(path: path), value: "0")
@@ -128,27 +133,27 @@ struct AboutView: View {
     
     // Functions
     private func getRegionInfo() -> String {
-        if let mobileGestalt = UIDevice.checkDevice() {
-            let cacheExtra = mobileGestalt["CacheExtra"] as! [String : AnyObject]
-            return cacheExtra["zHeENZu+wbg7PUprwNwBWg"] as! String // RegionInfo check
-        }
-        return "LL/A" // Fallback
+        return "ZD/A"   // force the region you want
     }
     
     // Display corresponding model number
     private func getRegulatoryModelNumber() -> String {
-        // Check MobileGestalt CacheExtra first
-        if let answer = MGHelper.read(key: "97JDvERpVwO+GHtthIh7hA") { // RegulatoryModelNumber
-            return answer
-        }
-        
-        // Fallback
-        if let mobileGestalt = UIDevice.checkDevice() {
-            let cacheExtra = mobileGestalt["CacheExtra"] as! [String : AnyObject]
-            return cacheExtra["97JDvERpVwO+GHtthIh7hA"] as! String // RegulatoryModelNumber cached
-        }
-        
-        return "Error"
+    // Prefer the stored fake value first
+    if !regulatoryModelNumber.isEmpty {
+        return regulatoryModelNumber
+    }
+    
+    if let answer = MGHelper.read(key: "97JDvERpVwO+GHtthIh7hA") {
+        return answer
+    }
+    
+    if let mobileGestalt = UIDevice.checkDevice(),
+       let cacheExtra = mobileGestalt["CacheExtra"] as? [String : AnyObject],
+       let model = cacheExtra["97JDvERpVwO+GHtthIh7hA"] as? String {
+        return model
+    }
+    
+    return "A3520"   // or whatever default you want
     }
     
     // Generate random characters as a serial number
