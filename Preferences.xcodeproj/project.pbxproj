@@ -1411,7 +1411,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Preferences/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Settings;
+				INFOPLIST_KEY_CFBundleDisplayName = Einstellungen;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "To simulate storage-related functionality.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To simulate Bluetooth-related functionality.";
@@ -1463,7 +1463,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Preferences/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Settings;
+				INFOPLIST_KEY_CFBundleDisplayName = Einstellungen;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "To simulate storage-related functionality.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "To simulate Bluetooth-related functionality.";
