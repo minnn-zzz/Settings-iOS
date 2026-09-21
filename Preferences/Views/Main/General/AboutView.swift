@@ -43,7 +43,7 @@ struct AboutView: View {
                     )
                 )
                 
-                LabeledContent("ProductModelName".localized(path: path), value: UIDevice."iPhone 17")
+                LabeledContent("ProductModelName".localized(path: path), value: "iPhone 17")
                     .textSelection(.enabled)
                 LabeledContent(
                     "ProductModel".localized(path: path),
