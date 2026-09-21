@@ -9,7 +9,7 @@ import SwiftUI
 struct AppleAccountSection: View {
     // Change these to whatever you want your friends to see
     private let displayName = "Machi Ming"       // your fake name
-    private let email = "Apple Account, iCLoud+ und mehr"  // your fake email
+    private let email = "Apple Account, iCloud+ und mehr"  // your fake email
     
     var body: some View {
         HStack(spacing: 12) {
