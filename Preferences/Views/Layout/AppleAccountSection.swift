@@ -2,32 +2,37 @@
 //  AppleAccountSection.swift
 //  Preferences
 //
-//  Settings
-//
 
 import SwiftUI
 
-/// Apple Account Button Label
+/// Apple Account Button Label (fake logged-in state)
 struct AppleAccountSection: View {
+    // Change these to whatever you want your friends to see
+    private let displayName = "Ming"       // your fake name
+    private let email = "ming92304@gmail.com"  // your fake email
+    
     var body: some View {
-        HStack {
-            Image(
-                "AppleAccount_Icon_Blue",
-                bundle: Bundle(path: "\(UIDevice.RuntimePath)/System/Library/PrivateFrameworks/AppleAccountUI.framework")
-            )
-            .resizable()
-            .frame(width: 60, height: 60)
+        HStack(spacing: 12) {
+            // Profile picture (system person icon styled like the real one)
+            Image(systemName: "person.crop.circle.fill")
+                .resizable()
+                .frame(width: 60, height: 60)
+                .foregroundStyle(.white, .gray.gradient)
             
-            VStack(alignment: .leading) {
-                Text("Apple Account")
+            VStack(alignment: .leading, spacing: 2) {
+                Text(displayName)
                     .bold()
                     .font(.title3)
-                Text("Sign in to access your iCloud data, the App Store, Apple services, and more.")
+                    .foregroundStyle(.primary)
+                
+                Text(email)
                     .foregroundStyle(.secondary)
                     .font(.footnote)
             }
-            .padding(.leading, 0)
+            
+            Spacer(minLength: 0)
         }
+        .padding(.vertical, 4)
     }
 }
 
